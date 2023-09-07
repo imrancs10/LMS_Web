@@ -1,4 +1,5 @@
-﻿using iText.Html2pdf;
+﻿using ClosedXML.Excel;
+using iText.Html2pdf;
 using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
@@ -7,7 +8,10 @@ using LearningManagementSystem.Repositories.Student.Service;
 using LearningManagementSystem.ViewModels.Request;
 using LearningManagementSystem.ViewModels.Response;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Reflection;
 using System.Text;
+using static Azure.Core.HttpHeader;
 using Path = System.IO.Path;
 
 namespace LearningManagementSystem.Controllers;
@@ -222,8 +226,45 @@ public class StudentController : Controller
             return File(byteArrayOutputStream.ToArray(), "application/pdf", "Student_Export.pdf");
         }
     }
+    [HttpPost]
+    public IActionResult ExportExcel()
+    {
+        List<StudentListModel> customers = _studentService.GetStudentList();
+        using (XLWorkbook wb = new XLWorkbook())
+        {
+            wb.Worksheets.Add(ToDataTable(customers.ToList()));
+            using (MemoryStream stream = new MemoryStream())
+            {
+                wb.SaveAs(stream);
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Student_Export.xlsx");
+            }
+        }
+        return View();
+    }
     #region Private Methods
-
+    public DataTable ToDataTable<T>(List<T> items)
+    {
+        DataTable dataTable = new DataTable(typeof(T).Name);
+        //Get all the properties
+        PropertyInfo[] Props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (PropertyInfo prop in Props)
+        {
+            //Setting column names as Property names
+            dataTable.Columns.Add(prop.Name);
+        }
+        foreach (T item in items)
+        {
+            var values = new object[Props.Length];
+            for (int i = 0; i < Props.Length; i++)
+            {
+                //inserting property values to datatable rows
+                values[i] = Props[i].GetValue(item, null);
+            }
+            dataTable.Rows.Add(values);
+        }
+        //put a breakpoint here and check datatable
+        return dataTable;
+    }
     private string UploadFile(IFormFile file, string rollNumber, string uploadFileName)
     {
         string uploadsFolder = Path.Combine(WebHostEnvironment.WebRootPath, $"Uploads/Students/{rollNumber}");

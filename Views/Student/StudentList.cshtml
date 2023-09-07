@@ -17,7 +17,10 @@
     <br />
     <div>
         <form method="post" asp-action="Export" asp-controller="Student">
-            <input type="submit" id="btnSubmit" value="Export" />
+            <input type="submit" id="btnSubmit" value="Export to PDF" />
+        </form>
+        <form method="post" asp-action="ExportExcel" asp-controller="Student">
+            <input type="submit" id="btnSubmit" value="Export to Excel" />
         </form>
     </div>
     <table class="table">
