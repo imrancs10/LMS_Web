@@ -182,7 +182,7 @@ public class StudentController : Controller
             sb.Append("</td>");
 
             sb.Append("<td style='border: 1px solid #ccc'>");
-            sb.Append(customer.CreatedDate.Value.ToLongDateString());
+            sb.Append(customer.CreatedDate.Value.ToString());
             sb.Append("</td>");
             sb.Append("</tr>");
         }

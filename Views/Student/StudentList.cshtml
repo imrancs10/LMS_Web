@@ -31,6 +31,7 @@
                 <th>File 1</th>
                 <th>File 2</th>
                 <th>File 3</th>
+                <th>Submitted On</th>
                 @* <th>Delete</th>*@
             </tr>
         </thead>
@@ -80,6 +81,7 @@
                             <p>-</p>
                         }
                     </td>
+                    <td>@student.CreatedDate.Value.ToString()</td>
                     @* <td>
             <form method="post" action="@Url.Action("DeleteStudentDetail", "Student")">
             <input type="hidden" name="id" value="@student.Id" />

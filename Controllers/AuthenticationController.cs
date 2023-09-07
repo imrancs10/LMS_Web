@@ -23,7 +23,7 @@ namespace LearningManagementSystem.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid Username.");
                 return View(model);
             }
-            else if (model.Password != "Welcome@123" && model.Password != "SPIT@54321")
+            else if (model.Password != "Gr8@123" && model.Password != "SPIT@54321")
             {
                 ModelState.AddModelError(string.Empty, "Invalid Password.");
                 return View(model);
