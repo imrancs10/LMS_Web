@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\SPIT\LMS\Publish</_PublishTargetUrl>
+    <History>True|2023-09-07T07:24:48.4404742Z;True|2023-09-07T12:47:27.9453723+05:30;True|2023-09-07T12:15:18.0134145+05:30;True|2023-09-07T12:03:41.7148557+05:30;True|2023-09-07T11:33:57.8529981+05:30;True|2023-09-07T02:13:09.1442219+05:30;True|2023-09-07T01:42:27.0520455+05:30;</History>
+  </PropertyGroup>
+</Project>
