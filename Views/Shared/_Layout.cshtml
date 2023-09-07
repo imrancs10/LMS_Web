@@ -24,12 +24,15 @@
                 </button>
                 @if (!string.IsNullOrEmpty(userRole))
                 {
+                    <div class="col-11"></div>
+                    <div class="col-1">
                     <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Logout">Logout</a>
                             </li>
                         </ul>
+                    </div>
                     </div>
                 }
             </div>

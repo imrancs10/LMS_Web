@@ -15,13 +15,18 @@
         <h3>Admin Dashboard</h3>
     </div>
     <br />
-    <div>
-        <form method="post" asp-action="Export" asp-controller="Student">
+    <div class="row">
+        <div class="col-md-6" style="text-align:right">
+            <form method="post" asp-action="Export" asp-controller="Student">
             <input type="submit" id="btnSubmit" value="Export to PDF" />
         </form>
+        </div>
+        <div class="col-md-6">            
         <form method="post" asp-action="ExportExcel" asp-controller="Student">
             <input type="submit" id="btnSubmit" value="Export to Excel" />
         </form>
+        </div>
+        
     </div>
     <table class="table">
         <thead>
