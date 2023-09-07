@@ -10,4 +10,5 @@ public class StudentListModel
     public string? FileUrl1 { get; set; }
     public string? FileUrl2 { get; set; }
     public string? FileUrl3 { get; set; }
+    public DateTime? CreatedDate { get; set; }
 }

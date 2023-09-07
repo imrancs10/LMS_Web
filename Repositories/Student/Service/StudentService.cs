@@ -3,7 +3,7 @@ using LearningManagementSystem.ViewModels.Response;
 
 namespace LearningManagementSystem.Repositories.Student.Service;
 
-public class StudentService: IStudentService
+public class StudentService : IStudentService
 {
     private readonly LMSContext _db;
     private readonly IConfiguration Configuration;
@@ -53,6 +53,7 @@ public class StudentService: IStudentService
             RollNumber = x.RollNumber,
             AadhaarNumber = x.AadhaarNumber,
             MobileNumber = x.MobileNumber,
+            CreatedDate = x.CreatedOn,
             FileUrl1 = !string.IsNullOrEmpty(x.UploadFile1) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile1}" : string.Empty,
             FileUrl2 = !string.IsNullOrEmpty(x.UploadFile2) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile2}" : string.Empty,
             FileUrl3 = !string.IsNullOrEmpty(x.UploadFile3) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile3}" : string.Empty,
@@ -63,7 +64,7 @@ public class StudentService: IStudentService
     {
         var studentDetail = _db.Student.Where(x => x.Id == Id).FirstOrDefault();
 
-        if(studentDetail == null)
+        if (studentDetail == null)
         {
             return false;
         }

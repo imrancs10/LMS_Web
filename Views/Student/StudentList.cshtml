@@ -2,22 +2,28 @@
 @model List<StudentListModel>
 @{
     ViewData["Title"] = "Students List";
+    int index = 0;
 }
 
 @if (Model != null && Model.Count() > 0)
 {
     <div class="text-center" style="width:1200px;!important">
-    <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
-    <br><h3>Learning Management System</h3>
-    <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
-    <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6><br>
-    <h3>Admin Dashboard</h3>
-</div>
+        <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
+        <br><h3>Learning Management System</h3>
+        <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
+        <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6><br>
+        <h3>Admin Dashboard</h3>
+    </div>
     <br />
-    
+    <div>
+        <form method="post" asp-action="Export" asp-controller="Student">
+            <input type="submit" id="btnSubmit" value="Export" />
+        </form>
+    </div>
     <table class="table">
         <thead>
             <tr>
+                <th>Sr No</th>
                 <th>Name</th>
                 <th>System Number</th>
                 <th>Govt. Id Number</th>
@@ -25,13 +31,15 @@
                 <th>File 1</th>
                 <th>File 2</th>
                 <th>File 3</th>
-                <th>Delete</th>
+                @* <th>Delete</th>*@
             </tr>
         </thead>
         <tbody>
             @foreach (var student in Model)
             {
+                index = index + 1;
                 <tr>
+                    <td>@index</td>
                     <td>@student.Name</td>
                     <td>@student.RollNumber</td>
                     <td>@student.AadhaarNumber</td>
@@ -72,35 +80,38 @@
                             <p>-</p>
                         }
                     </td>
-                    <td>
-                        <form method="post" action="@Url.Action("DeleteStudentDetail", "Student")">
-                            <input type="hidden" name="id" value="@student.Id" />
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
-                        </form>
-                    </td>
+                    @* <td>
+            <form method="post" action="@Url.Action("DeleteStudentDetail", "Student")">
+            <input type="hidden" name="id" value="@student.Id" />
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+            </form>
+            </td>*@
                 </tr>
             }
         </tbody>
-    </table><br />
+    </table>
+    <br />
     <div class="text-center">
-    <img src="~/Footer_Logo.png" width="700px" height="100px" />
-</div>
+        <img src="~/Footer_Logo.png" width="700px" height="100px" />
+    </div>
 
 }
 else
 {
     <div class="text-center" style="width:1200px;!important">
-    <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
-    <br><h3>Learning Management System</h3>
-    <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
-    <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6><br>
-    <h3>Admin Dashboard</h3>
-</div><br />
+        <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
+        <br><h3>Learning Management System</h3>
+        <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
+        <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6><br>
+        <h3>Admin Dashboard</h3>
+    </div>
+    <br />
 
     <div class="text-center">
         <h4>No students records added yet!</h4>
-    </div><br />
-        <div class="text-center">
-    <img src="~/Footer_Logo.png" width="700px" height="100px" />
-</div>
+    </div>
+    <br />
+    <div class="text-center">
+        <img src="~/Footer_Logo.png" width="700px" height="100px" />
+    </div>
 }

@@ -1,7 +1,14 @@
-﻿using LearningManagementSystem.Helpers;
+﻿using iText.Html2pdf;
+using iText.IO.Source;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using LearningManagementSystem.Helpers;
 using LearningManagementSystem.Repositories.Student.Service;
 using LearningManagementSystem.ViewModels.Request;
+using LearningManagementSystem.ViewModels.Response;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using Path = System.IO.Path;
 
 namespace LearningManagementSystem.Controllers;
 
@@ -123,7 +130,77 @@ public class StudentController : Controller
 
         return RedirectToAction("StudentList", "Student");
     }
+    [HttpPost]
+    public FileResult Export()
+    {
+        List<StudentListModel> customers = _studentService.GetStudentList();
 
+        if (customers == null || customers.Count() == 0)
+        {
+            ModelState.AddModelError(string.Empty, "No students added yet!");
+        }
+
+        //Building an HTML string.
+        StringBuilder sb = new StringBuilder();
+
+        //Table start.
+        sb.Append("<table border='1' cellpadding='5' cellspacing='0' style='border: 1px solid #ccc;font-family: Arial; font-size: 10pt;'>");
+
+        //Building the Header row.
+        sb.Append("<tr>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Sr No</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Name</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>System Number</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Govt. Id Number</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Mobile No</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Submitted On</th>");
+        sb.Append("</tr>");
+
+        //Building the Data rows.
+        for (int i = 0; i < customers.Count; i++)
+        {
+            var customer = customers[i];
+            sb.Append("<tr>");
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append((i + 1).ToString());
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.Name);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.RollNumber);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.AadhaarNumber);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.MobileNumber);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.CreatedDate.Value.ToLongDateString());
+            sb.Append("</td>");
+            sb.Append("</tr>");
+        }
+
+        //Table end.
+        sb.Append("</table>");
+
+        using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(sb.ToString())))
+        {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.SetDefaultPageSize(PageSize.A4);
+            HtmlConverter.ConvertToPdf(stream, pdfDocument);
+            pdfDocument.Close();
+            return File(byteArrayOutputStream.ToArray(), "application/pdf", "Student_Export.pdf");
+        }
+    }
     #region Private Methods
 
     private string UploadFile(IFormFile file, string rollNumber, string uploadFileName)
