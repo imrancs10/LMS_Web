@@ -44,7 +44,7 @@ public class StudentService : IStudentService
     {
         var studentList = (from S in _db.Student
                            where S.IsActive == true
-                           select S).ToList();
+                           select S).OrderBy(x => x.Id).ToList();
 
         return studentList.Select(x => new StudentListModel()
         {
@@ -54,6 +54,10 @@ public class StudentService : IStudentService
             AadhaarNumber = x.AadhaarNumber,
             MobileNumber = x.MobileNumber,
             CreatedDate = x.CreatedOn,
+            Shift = x.Shift,
+            FileName1 = x.UploadFile1,
+            FileName2 = x.UploadFile2,
+            FileName3 = x.UploadFile3,
             FileUrl1 = !string.IsNullOrEmpty(x.UploadFile1) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile1}" : string.Empty,
             FileUrl2 = !string.IsNullOrEmpty(x.UploadFile2) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile2}" : string.Empty,
             FileUrl3 = !string.IsNullOrEmpty(x.UploadFile3) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile3}" : string.Empty,

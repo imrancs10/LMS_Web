@@ -10,5 +10,9 @@ public class StudentListModel
     public string? FileUrl1 { get; set; }
     public string? FileUrl2 { get; set; }
     public string? FileUrl3 { get; set; }
+    public string? FileName1 { get; set; }
+    public string? FileName2 { get; set; }
+    public string? FileName3 { get; set; }
+    public string? Shift { get; set; }
     public DateTime? CreatedDate { get; set; }
 }

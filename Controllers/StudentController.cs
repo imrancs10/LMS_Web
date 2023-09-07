@@ -149,10 +149,14 @@ public class StudentController : Controller
         //Building the Header row.
         sb.Append("<tr>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Sr No</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Shift</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Name</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>System Number</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Govt. Id Number</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Mobile No</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 1</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 2</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 3</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Submitted On</th>");
         sb.Append("</tr>");
 
@@ -164,6 +168,11 @@ public class StudentController : Controller
             sb.Append("<td style='border: 1px solid #ccc'>");
             sb.Append((i + 1).ToString());
             sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.Shift);
+            sb.Append("</td>");
+
 
             sb.Append("<td style='border: 1px solid #ccc'>");
             sb.Append(customer.Name);
@@ -182,6 +191,18 @@ public class StudentController : Controller
             sb.Append("</td>");
 
             sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.FileName1);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.FileName2);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
+            sb.Append(customer.FileName3);
+            sb.Append("</td>");
+
+            sb.Append("<td style='border: 1px solid #ccc'>");
             sb.Append(customer.CreatedDate.Value.ToString());
             sb.Append("</td>");
             sb.Append("</tr>");
@@ -195,7 +216,7 @@ public class StudentController : Controller
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(byteArrayOutputStream);
             PdfDocument pdfDocument = new PdfDocument(writer);
-            pdfDocument.SetDefaultPageSize(PageSize.A4);
+            pdfDocument.SetDefaultPageSize(PageSize.A4.Rotate());
             HtmlConverter.ConvertToPdf(stream, pdfDocument);
             pdfDocument.Close();
             return File(byteArrayOutputStream.ToArray(), "application/pdf", "Student_Export.pdf");
