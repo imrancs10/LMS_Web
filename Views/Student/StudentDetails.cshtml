@@ -5,6 +5,8 @@
     var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
     var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
     var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
+    var shiftList = lookupDetail.Where(x => x.LookupType == "Shift").ToList();
+    var studentDetail = ViewData["Student"] as Student;
 }
 @model StudentDetailModel
 
@@ -23,33 +25,43 @@
                     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                 </div>
             </div>
+            <div class="form-group">
+                <div class="text-danger">
+                    @if (!string.IsNullOrEmpty(studentDetail.Name))
+                    {
+                        <p>Student Detail are fetched from System Number, If data are not correct then please change it or provide the mobile number to Submit</p>
+                    }
+                </div>
+            </div>
             <form asp-action="StudentDetails" method="post" enctype="multipart/form-data" id="formStudentDetails">
                 <hr />
                 <div class="form-group mb-2">
                     <label asp-for="Shift">Examination Shift</label>
-                    <select class="form-control">
+                    <select class="form-control" asp-for="Shift">
                         <option value="0">Select</option>
-                        <option value="Shift 1">Shift 1</option>
-                        <option value="Shift 2">Shift 2</option>
+                        @foreach (var data in shiftList)
+                        {
+                            <option value="@data.LookupId">@data.LookupName</option>
+                        }
                     </select>
                 </div>
                 <div class="form-group mb-2">
-                    <label asp-for="Name">Name</label>
-                    <input asp-for="Name" class="form-control" />
+                    <label asp-for="Name">Name<span style="color:red">*</span></label>
+                    <input asp-for="Name" class="form-control" value="@studentDetail.Name" />
+                </div>
+
+                @* <div class="form-group mb-2">
+                <label asp-for="RollNumber">System Number</label>
+                <input asp-for="RollNumber" class="form-control" />
+                </div>*@
+
+                <div class="form-group mb-2">
+                    <label asp-for="AadhaarNumber">Any Govt Id Number(PAN/Aadhar/DL... Number)<span style="color:red">*</span></label>
+                    <input asp-for="AadhaarNumber" class="form-control" value="@studentDetail.AadhaarNumber" />
                 </div>
 
                 <div class="form-group mb-2">
-                    <label asp-for="RollNumber">System Number</label>
-                    <input asp-for="RollNumber" class="form-control" />
-                </div>
-
-                <div class="form-group mb-2">
-                    <label asp-for="AadhaarNumber">Any Govt Id Number(PAN/Aadhar/DL... Number)</label>
-                    <input asp-for="AadhaarNumber" class="form-control" />
-                </div>
-
-                <div class="form-group mb-2">
-                    <label asp-for="MobileNumber">Mobile No</label>
+                    <label asp-for="MobileNumber">Mobile No<span style="color:red">*</span></label>
                     <input asp-for="MobileNumber" class="form-control" onkeypress="return isNumberKey(event)" maxlength="10" />
                 </div>
 

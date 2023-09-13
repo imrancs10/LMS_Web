@@ -17,10 +17,6 @@ public partial class Student
 
     public string MobileNumber { get; set; }
 
-    public string UploadFile1 { get; set; }
-    public string UploadFile2 { get; set; }
-    public string UploadFile3 { get; set; }
-
     public DateTime? CreatedOn { get; set; }
 
     public DateTime? ModifiedOn { get; set; }

@@ -7,7 +7,6 @@ public class StudentDetailModel
     [Required]
     public string Name { get; set; }
 
-    [Required]
     [Display(Name = "Roll Number")]
     public string RollNumber { get; set; }
 
@@ -23,7 +22,7 @@ public class StudentDetailModel
 
     [Required]
     [Display(Name = "Shift")]
-    public string Shift { get; set; }
+    public int? Shift { get; set; }
 
     public IFormFile? UploadFile1 { get; set; }
     public IFormFile? UploadFile2 { get; set; }

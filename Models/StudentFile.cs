@@ -9,7 +9,7 @@ public partial class StudentFile
 {
     public int Id { get; set; }
     public int? StudentId { get; set; }
-    public string Shift { get; set; }
+    public int? ShiftId { get; set; }
     public string? FileUploadName { get; set; }
     public DateTime? CreatedDate { get; set; }
 

@@ -33,6 +33,9 @@ public class StudentController : Controller
     {
         var lookupList = _lookupService.GetAllLookup();
         ViewData["Lookup"] = lookupList;
+        var RollNumber = HttpContext.Session.GetString("RoleNumber");
+        var studentDetail = _studentService.GetStudentDetail(RollNumber);
+        ViewData["Student"] = studentDetail != null ? studentDetail : new Models.Student();
         return View();
     }
 
@@ -42,18 +45,19 @@ public class StudentController : Controller
     {
         var lookupList = _lookupService.GetAllLookup();
         ViewData["Lookup"] = lookupList;
+        model.RollNumber = HttpContext.Session.GetString("RoleNumber");
+        var studentDetail = _studentService.GetStudentDetail(model.RollNumber);
+        ViewData["Student"] = studentDetail != null ? studentDetail : new Models.Student();
         var createdDate = DateTime.Now;
 
         if (!ModelState.IsValid)
         {
             return View(model);
         }
-
-        var studentDetail = _studentService.GetStudentDetail(model.RollNumber);
         if (studentDetail != null)
         {
-            ModelState.AddModelError(string.Empty, "Student detail with provided Desk Id already exists.");
-            return View(model);
+            //ModelState.AddModelError(string.Empty, "Student detail with provided Desk Id already exists.");
+            //return View(model);
         }
 
         var uploadFileName1 = string.Empty;
@@ -64,6 +68,8 @@ public class StudentController : Controller
             ModelState.AddModelError("UploadFile", "File Upload 1 is mandatory");
             return View(model);
         }
+        var shiftName = lookupList.FirstOrDefault(x => x.LookupId == model.Shift).LookupName;
+        shiftName = shiftName.Replace(" ", "");
         if (model.UploadFile1 != null)
         {
             string fileExtension = Path.GetExtension(model.UploadFile1.FileName);
@@ -73,29 +79,29 @@ public class StudentController : Controller
             //    return View(model);
             //}
             //else
-            uploadFileName1 = $"{model.RollNumber + "_1"}{fileExtension}";
+            uploadFileName1 = $"{model.RollNumber + "_File1"}{fileExtension}";
         }
         if (model.UploadFile2 != null)
         {
             string fileExtension = Path.GetExtension(model.UploadFile2.FileName);
-            uploadFileName2 = $"{model.RollNumber + "_2"}{fileExtension}";
+            uploadFileName2 = $"{model.RollNumber + "_File2"}{fileExtension}";
 
         }
         if (model.UploadFile3 != null)
         {
             string fileExtension = Path.GetExtension(model.UploadFile3.FileName);
-            uploadFileName3 = $"{model.RollNumber + "_3"}{fileExtension}";
+            uploadFileName3 = $"{model.RollNumber + "_File3"}{fileExtension}";
         }
 
-        var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true);
+        var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true, model.Shift);
         if (student != null)
         {
             if (model.UploadFile1 != null)
-                UploadFile(model.UploadFile1, model.RollNumber, uploadFileName1);
+                UploadFile(model.UploadFile1, model.RollNumber, uploadFileName1, shiftName);
             if (model.UploadFile2 != null)
-                UploadFile(model.UploadFile2, model.RollNumber, uploadFileName2);
+                UploadFile(model.UploadFile2, model.RollNumber, uploadFileName2, shiftName);
             if (model.UploadFile3 != null)
-                UploadFile(model.UploadFile3, model.RollNumber, uploadFileName3);
+                UploadFile(model.UploadFile3, model.RollNumber, uploadFileName3, shiftName);
         }
         else
         {
@@ -274,9 +280,9 @@ public class StudentController : Controller
         //put a breakpoint here and check datatable
         return dataTable;
     }
-    private string UploadFile(IFormFile file, string rollNumber, string uploadFileName)
+    private void UploadFile(IFormFile file, string rollNumber, string uploadFileName, string shiftName)
     {
-        string uploadsFolder = Path.Combine(WebHostEnvironment.WebRootPath, $"Uploads/Students/{rollNumber}");
+        string uploadsFolder = Path.Combine(WebHostEnvironment.WebRootPath, $"Uploads/Students/{rollNumber}/{shiftName}");
         if (!Directory.Exists(uploadsFolder))
         {
             Directory.CreateDirectory(uploadsFolder);
@@ -287,8 +293,7 @@ public class StudentController : Controller
         {
             file.CopyTo(fileStream);
         }
-
-        return file.FileName;
+        //return file.FileName;
     }
 
     #endregion Private Methods

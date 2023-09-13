@@ -21,21 +21,50 @@ public class StudentService : IStudentService
                 select S).FirstOrDefault();
     }
 
-    public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive)
+    public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive, int? shiftId)
     {
         Models.Student student = new Models.Student();
+        Models.StudentFile studentFile;
         student.Name = Name;
         student.RollNumber = RollNumber;
         student.AadhaarNumber = AadhaarNumber;
         student.MobileNumber = MobileNumber;
-        student.UploadFile1 = !string.IsNullOrEmpty(FileName1) ? FileName1 : string.Empty;
-        student.UploadFile2 = !string.IsNullOrEmpty(FileName2) ? FileName2 : string.Empty;
-        student.UploadFile3 = !string.IsNullOrEmpty(FileName3) ? FileName3 : string.Empty;
         student.CreatedOn = CreatedDate;
         student.ModifiedOn = CreatedDate;
         student.IsActive = IsActive;
+        if (_db.Student.FirstOrDefault(x => x.RollNumber == RollNumber && x.Name == Name) == null)
+        {
+            _db.Student.Add(student);
+            _db.SaveChanges();
+        }
 
-        _db.Student.Add(student);
+        if (!string.IsNullOrEmpty(FileName1))
+        {
+            studentFile = new Models.StudentFile();
+            studentFile.ShiftId = shiftId;
+            studentFile.StudentId = student.Id;
+            studentFile.FileUploadName = FileName1;
+            studentFile.CreatedDate = DateTime.Now;
+            _db.StudentFile.Add(studentFile);
+        }
+        if (!string.IsNullOrEmpty(FileName2))
+        {
+            studentFile = new Models.StudentFile();
+            studentFile.ShiftId = shiftId;
+            studentFile.StudentId = student.Id;
+            studentFile.FileUploadName = FileName2;
+            studentFile.CreatedDate = DateTime.Now;
+            _db.StudentFile.Add(studentFile);
+        }
+        if (!string.IsNullOrEmpty(FileName3))
+        {
+            studentFile = new Models.StudentFile();
+            studentFile.ShiftId = shiftId;
+            studentFile.StudentId = student.Id;
+            studentFile.FileUploadName = FileName3;
+            studentFile.CreatedDate = DateTime.Now;
+            _db.StudentFile.Add(studentFile);
+        }
         _db.SaveChanges();
         return student;
     }
@@ -54,12 +83,12 @@ public class StudentService : IStudentService
             AadhaarNumber = x.AadhaarNumber,
             MobileNumber = x.MobileNumber,
             CreatedDate = x.CreatedOn,
-            FileName1 = x.UploadFile1,
-            FileName2 = x.UploadFile2,
-            FileName3 = x.UploadFile3,
-            FileUrl1 = !string.IsNullOrEmpty(x.UploadFile1) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile1}" : string.Empty,
-            FileUrl2 = !string.IsNullOrEmpty(x.UploadFile2) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile2}" : string.Empty,
-            FileUrl3 = !string.IsNullOrEmpty(x.UploadFile3) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile3}" : string.Empty,
+            //FileName1 = x.UploadFile1,
+            //FileName2 = x.UploadFile2,
+            //FileName3 = x.UploadFile3,
+            //FileUrl1 = !string.IsNullOrEmpty(x.UploadFile1) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile1}" : string.Empty,
+            //FileUrl2 = !string.IsNullOrEmpty(x.UploadFile2) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile2}" : string.Empty,
+            //FileUrl3 = !string.IsNullOrEmpty(x.UploadFile3) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile3}" : string.Empty,
         }).ToList();
     }
 
