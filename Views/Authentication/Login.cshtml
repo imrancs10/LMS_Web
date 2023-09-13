@@ -1,6 +1,11 @@
 ﻿@using LearningManagementSystem.ViewModels.Request
+@using LearningManagementSystem.Models
 @{
     ViewData["Title"] = "Login";
+    var lookupDetail = ViewData["Lookup"] as List<Lookup>;
+    var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
+    var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
+    var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
 }
 
 @model LoginModel
@@ -11,8 +16,8 @@
 <div class="text-center" style="width:1200px;!important">
     <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
     <br><h3>Learning Management System</h3>
-    <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
-    <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6>
+    <h6>@ExamName</h6>
+    <h6 style="color:red">DATE OF EXAM: @date</h6>
 </div>
 
 <div class="container">
@@ -27,7 +32,7 @@
                 <h2 style="text-align:center">Login</h2>
                 <hr />
                 <div class="form-group mb-2">
-                    <label asp-for="Username">Username</label>
+                    <label asp-for="Username">Username/Desk Number</label>
                     <input asp-for="Username" class="form-control" />
                 </div>
 
@@ -40,7 +45,8 @@
             </form>
         </div>
     </div>
-</div><br />
+</div>
+<br />
 
 <div class="text-center">
     <img src="~/Footer_Logo.png" width="700px" height="100px" />

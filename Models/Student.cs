@@ -21,7 +21,6 @@ public partial class Student
     public string UploadFile2 { get; set; }
     public string UploadFile3 { get; set; }
 
-    public string Shift { get; set; }
     public DateTime? CreatedOn { get; set; }
 
     public DateTime? ModifiedOn { get; set; }

@@ -1,7 +1,7 @@
 ﻿using LearningManagementSystem.Models;
 using LearningManagementSystem.ViewModels.Response;
 
-namespace LearningManagementSystem.Repositories.Student.Service;
+namespace LearningManagementSystem.Repositories.Service.Student;
 
 public class StudentService : IStudentService
 {
@@ -54,7 +54,6 @@ public class StudentService : IStudentService
             AadhaarNumber = x.AadhaarNumber,
             MobileNumber = x.MobileNumber,
             CreatedDate = x.CreatedOn,
-            Shift = x.Shift,
             FileName1 = x.UploadFile1,
             FileName2 = x.UploadFile2,
             FileName3 = x.UploadFile3,

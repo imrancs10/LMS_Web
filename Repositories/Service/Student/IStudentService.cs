@@ -1,6 +1,6 @@
 ﻿using LearningManagementSystem.ViewModels.Response;
 
-namespace LearningManagementSystem.Repositories.Student.Service;
+namespace LearningManagementSystem.Repositories.Service.Student;
 
 public interface IStudentService
 {

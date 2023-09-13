@@ -2,6 +2,10 @@
 @model List<StudentListModel>
 @{
     ViewData["Title"] = "Students List";
+    var lookupDetail = ViewData["Lookup"] as List<Lookup>;
+    var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
+    var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
+    var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
     int index = 0;
 }
 
@@ -10,8 +14,8 @@
     <div class="text-center" style="width:1200px;!important">
         <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
         <br><h3>Learning Management System</h3>
-        <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
-        <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6><br>
+        <h6>@ExamName</h6>
+        <h6 style="color:red">DATE OF EXAM: @date</h6><br>
         <h3>Admin Dashboard</h3>
     </div>
     <br />
@@ -32,7 +36,6 @@
         <thead>
             <tr>
                 <th>Sr No</th>
-                <th>Shift</th>
                 <th>Name</th>
                 <th>System Number</th>
                 <th>Govt. Id Number</th>
@@ -50,7 +53,6 @@
                 index = index + 1;
                 <tr>
                     <td>@index</td>
-                    <td>@student.Shift</td>
                     <td>@student.Name</td>
                     <td>@student.RollNumber</td>
                     <td>@student.AadhaarNumber</td>

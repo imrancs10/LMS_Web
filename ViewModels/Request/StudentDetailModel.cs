@@ -21,6 +21,10 @@ public class StudentDetailModel
     [RegularExpression(@"^[1-9]\d{9}$", ErrorMessage = "Invalid Mobile Number.")]
     public string MobileNumber { get; set; }
 
+    [Required]
+    [Display(Name = "Shift")]
+    public string Shift { get; set; }
+
     public IFormFile? UploadFile1 { get; set; }
     public IFormFile? UploadFile2 { get; set; }
     public IFormFile? UploadFile3 { get; set; }

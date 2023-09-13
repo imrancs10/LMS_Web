@@ -4,7 +4,8 @@ using iText.IO.Source;
 using iText.Kernel.Geom;
 using iText.Kernel.Pdf;
 using LearningManagementSystem.Helpers;
-using LearningManagementSystem.Repositories.Student.Service;
+using LearningManagementSystem.Repositories.Service.Lookup;
+using LearningManagementSystem.Repositories.Service.Student;
 using LearningManagementSystem.ViewModels.Request;
 using LearningManagementSystem.ViewModels.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,18 @@ public class StudentController : Controller
 {
     private IWebHostEnvironment WebHostEnvironment { get; }
     private readonly IStudentService _studentService;
+    private readonly ILookupService _lookupService;
 
-    public StudentController(IWebHostEnvironment webHostEnvironment, IStudentService studentService)
+    public StudentController(IWebHostEnvironment webHostEnvironment, IStudentService studentService, ILookupService lookupService)
     {
+        _lookupService = lookupService;
         WebHostEnvironment = webHostEnvironment;
         _studentService = studentService;
     }
     public IActionResult StudentDetails()
     {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
         return View();
     }
 
@@ -35,6 +40,8 @@ public class StudentController : Controller
     [HttpPost]
     public IActionResult StudentDetails(StudentDetailModel model)
     {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
         var createdDate = DateTime.Now;
 
         if (!ModelState.IsValid)
@@ -105,6 +112,8 @@ public class StudentController : Controller
     [HttpGet]
     public IActionResult StudentList()
     {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
         var studentList = _studentService.GetStudentList();
 
         if (studentList == null || studentList.Count() == 0)
@@ -119,6 +128,8 @@ public class StudentController : Controller
     [HttpPost]
     public IActionResult DeleteStudentDetail(int id)
     {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
         if (id <= 0)
         {
             ModelState.AddModelError(string.Empty, "Invalid request");
@@ -137,6 +148,8 @@ public class StudentController : Controller
     [HttpPost]
     public FileResult Export()
     {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
         List<StudentListModel> customers = _studentService.GetStudentList();
 
         if (customers == null || customers.Count() == 0)
@@ -153,7 +166,6 @@ public class StudentController : Controller
         //Building the Header row.
         sb.Append("<tr>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Sr No</th>");
-        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Shift</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Name</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>System Number</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Govt. Id Number</th>");
@@ -172,11 +184,6 @@ public class StudentController : Controller
             sb.Append("<td style='border: 1px solid #ccc'>");
             sb.Append((i + 1).ToString());
             sb.Append("</td>");
-
-            sb.Append("<td style='border: 1px solid #ccc'>");
-            sb.Append(customer.Shift);
-            sb.Append("</td>");
-
 
             sb.Append("<td style='border: 1px solid #ccc'>");
             sb.Append(customer.Name);
@@ -229,6 +236,8 @@ public class StudentController : Controller
     [HttpPost]
     public IActionResult ExportExcel()
     {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
         List<StudentListModel> customers = _studentService.GetStudentList();
         using (XLWorkbook wb = new XLWorkbook())
         {

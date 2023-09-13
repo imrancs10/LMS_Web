@@ -1,11 +1,13 @@
 using LearningManagementSystem.Models;
-using LearningManagementSystem.Repositories.Student.Service;
+using LearningManagementSystem.Repositories.Service.Lookup;
+using LearningManagementSystem.Repositories.Service.Student;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<LMSContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnectionString")));
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<ILookupService, LookupService>();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
