@@ -8,6 +8,7 @@ using LearningManagementSystem.Repositories.Service.Lookup;
 using LearningManagementSystem.Repositories.Service.Student;
 using LearningManagementSystem.ViewModels.Request;
 using LearningManagementSystem.ViewModels.Response;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Reflection;
@@ -121,6 +122,37 @@ public class StudentController : Controller
         var lookupList = _lookupService.GetAllLookup();
         ViewData["Lookup"] = lookupList;
         var studentList = _studentService.GetStudentList();
+
+        if (studentList == null || studentList.Count() == 0)
+        {
+            ModelState.AddModelError(string.Empty, "No students added yet!");
+        }
+
+        return View(studentList);
+    }
+
+    [SessionCheck("LMS_User")]
+    [HttpGet]
+    public IActionResult UserStudentList()
+    {
+        var lookupList = _lookupService.GetAllLookup();
+        ViewData["Lookup"] = lookupList;
+        var userId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+        var totalUser = _lookupService.TotalUserDetail();
+        var userCount = totalUser.Count();
+        var studentList = _studentService.GetStudentList();
+        var recordCount = studentList.Count();
+        var UserIndex = totalUser.FindIndex(x => x.UserId == userId);
+        var recordDevideCount = recordCount / userCount;
+
+        if (UserIndex != userCount - 1)
+            studentList = studentList.Skip(UserIndex).Take(recordDevideCount).ToList();
+        else
+        {
+            recordDevideCount = recordDevideCount + recordCount % userCount;
+            studentList = studentList.Skip(UserIndex).Take(recordDevideCount).ToList();
+        }
+
 
         if (studentList == null || studentList.Count() == 0)
         {

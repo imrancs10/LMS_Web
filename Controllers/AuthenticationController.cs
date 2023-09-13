@@ -2,6 +2,7 @@
 using LearningManagementSystem.Repositories.Service.Student;
 using LearningManagementSystem.ViewModels.Request;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LearningManagementSystem.Controllers
@@ -33,11 +34,17 @@ namespace LearningManagementSystem.Controllers
             var adminUserName = _lookupService.GetLookupDetailByType("AdminUsername").FirstOrDefault().LookupName;
             var adminPassword = _lookupService.GetLookupDetailByType("AdminPassword").FirstOrDefault().LookupName;
             var studentPassword = _lookupService.GetLookupDetailByType("StudentPassword").FirstOrDefault().LookupName;
-
+            var lmsUser = _lookupService.CheckUserDetail(model.Username, model.Password);
             if (model.Username == adminUserName && model.Password == adminPassword)
             {
                 HttpContext.Session.SetString("UserRole", "LMS_Admin");
                 return RedirectToAction("StudentList", "Student");
+            }
+            else if (lmsUser != null)
+            {
+                HttpContext.Session.SetString("UserRole", "LMS_User");
+                HttpContext.Session.SetString("UserId", lmsUser.UserId.ToString());
+                return RedirectToAction("UserStudentList", "Student");
             }
             else if (model.Password == studentPassword)
             {

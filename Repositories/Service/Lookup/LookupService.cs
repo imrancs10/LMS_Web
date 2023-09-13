@@ -29,4 +29,19 @@ public class LookupService : ILookupService
                           select S).ToList();
         return lookupList;
     }
+
+    public Models.UserDetail CheckUserDetail(string username, string password)
+    {
+        var userdetail = (from S in _db.UserDetail
+                          where S.IsActive == true && S.UserName == username && S.Password == password
+                          select S).FirstOrDefault();
+        return userdetail;
+    }
+    public List<Models.UserDetail> TotalUserDetail()
+    {
+        var userdetail = (from S in _db.UserDetail
+                          where S.IsActive == true 
+                          select S).ToList();
+        return userdetail;
+    }
 }

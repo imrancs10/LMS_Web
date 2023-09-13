@@ -1,0 +1,138 @@
+﻿@using LearningManagementSystem.ViewModels.Response
+@model List<StudentListModel>
+@{
+    ViewData["Title"] = "Students List";
+    var lookupDetail = ViewData["Lookup"] as List<Lookup>;
+    var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
+    var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
+    var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
+    int index = 0;
+}
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="text-center" style="width:1200px;!important">
+        <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
+        <br><h3>Learning Management System</h3>
+        <h6>@ExamName</h6>
+        <h6 style="color:red">DATE OF EXAM: @date</h6><br>
+        <h3>Assessor Dashboard</h3>
+    </div>
+    <br />
+    <div class="row" style="display:none">
+        <div class="col-md-6" style="text-align:right">
+            <form method="post" asp-action="Export" asp-controller="Student">
+                <input type="submit" id="btnSubmit" value="Export to PDF" />
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form method="post" asp-action="ExportExcel" asp-controller="Student">
+                <input type="submit" id="btnSubmit" value="Export to Excel" />
+            </form>
+        </div>
+
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Name</th>
+                <th>System Number</th>
+                <th>Govt. Id Number</th>
+                <th>Mobile No</th>
+                <th>File 1</th>
+                <th>File 2</th>
+                <th>File 3</th>
+                <th>Submitted On</th>
+                <th>Mark</th>
+                @* <th>Delete</th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                index = index + 1;
+                <tr>
+                    <td>@index</td>
+                    <td>@student.Name</td>
+                    <td>@student.RollNumber</td>
+                    <td>@student.AadhaarNumber</td>
+                    <td>@student.MobileNumber</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(student.FileUrl1))
+                        {
+                            <a href="@student.FileUrl1" target="_blank">
+                                <i class="fas fa-file"></i> Open
+                            </a>
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(student.FileUrl2))
+                        {
+                            <a href="@student.FileUrl2" target="_blank">
+                                <i class="fas fa-file"></i> Open
+                            </a>
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(student.FileUrl3))
+                        {
+                            <a href="@student.FileUrl3" target="_blank">
+                                <i class="fas fa-file"></i> Open
+                            </a>
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>@student.CreatedDate.Value.ToString()</td>
+                    <td>
+                        <form>
+                            <input type="hidden" name="id" value="@student.Id" />
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Mark</button>
+                        </form>
+                    </td>
+                    @* <td>
+            <form method="post" action="@Url.Action("DeleteStudentDetail", "Student")">
+            <input type="hidden" name="id" value="@student.Id" />
+            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+            </form>
+            </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br />
+    <div class="text-center">
+        <img src="~/Footer_Logo.png" width="700px" height="100px" />
+    </div>
+
+}
+else
+{
+    <div class="text-center" style="width:1200px;!important">
+        <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
+        <br><h3>Learning Management System</h3>
+        <h6>ONLINE EXAM DOCUMENT SUBMISSION MODULE FOR OPERATOR POST AT BSEB, PATNA</h6>
+        <h6 style="color:red">DATE OF EXAM: 07 September 2023</h6><br>
+        <h3>Admin Dashboard</h3>
+    </div>
+    <br />
+
+    <div class="text-center">
+        <h4>No students records added yet!</h4>
+    </div>
+    <br />
+    <div class="text-center">
+        <img src="~/Footer_Logo.png" width="700px" height="100px" />
+    </div>
+}
