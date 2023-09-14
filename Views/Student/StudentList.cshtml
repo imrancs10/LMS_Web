@@ -22,15 +22,15 @@
     <div class="row">
         <div class="col-md-6" style="text-align:right">
             <form method="post" asp-action="Export" asp-controller="Student">
-            <input type="submit" id="btnSubmit" value="Export to PDF" />
-        </form>
+                <input type="submit" id="btnSubmit" value="Export to PDF" />
+            </form>
         </div>
-        <div class="col-md-6">            
-        <form method="post" asp-action="ExportExcel" asp-controller="Student">
-            <input type="submit" id="btnSubmit" value="Export to Excel" />
-        </form>
+        <div class="col-md-6">
+            <form method="post" asp-action="ExportExcel" asp-controller="Student">
+                <input type="submit" id="btnSubmit" value="Export to Excel" />
+            </form>
         </div>
-        
+
     </div>
     <table class="table">
         <thead>
@@ -40,9 +40,8 @@
                 <th>System Number</th>
                 <th>Govt. Id Number</th>
                 <th>Mobile No</th>
-                <th>File 1</th>
-                <th>File 2</th>
-                <th>File 3</th>
+                <th>Shift 1 Files</th>
+                <th>Shift 2 Files</th>
                 <th>Submitted On</th>
                 @* <th>Delete</th>*@
             </tr>
@@ -58,39 +57,19 @@
                     <td>@student.AadhaarNumber</td>
                     <td>@student.MobileNumber</td>
                     <td>
-                        @if (!string.IsNullOrEmpty(student.FileUrl1))
+                        @foreach (var file in student.Shift1FileUrls)
                         {
-                            <a href="@student.FileUrl1" target="_blank">
-                                <i class="fas fa-file"></i> Open
+                            <a href="@file" target="_blank" style="text-decoration:none">
+                                <i class="fas fa-file"></i> Open |
                             </a>
-                        }
-                        else
-                        {
-                            <p>-</p>
                         }
                     </td>
                     <td>
-                        @if (!string.IsNullOrEmpty(student.FileUrl2))
+                        @foreach (var file in student.Shift2FileUrls)
                         {
-                            <a href="@student.FileUrl2" target="_blank">
-                                <i class="fas fa-file"></i> Open
+                            <a href="@file" target="_blank" style="text-decoration:none">
+                                <i class="fas fa-file"></i> Open |
                             </a>
-                        }
-                        else
-                        {
-                            <p>-</p>
-                        }
-                    </td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(student.FileUrl3))
-                        {
-                            <a href="@student.FileUrl3" target="_blank">
-                                <i class="fas fa-file"></i> Open
-                            </a>
-                        }
-                        else
-                        {
-                            <p>-</p>
                         }
                     </td>
                     <td>@student.CreatedDate.Value.ToString()</td>

@@ -80,7 +80,11 @@ public class StudentService : IStudentService
                            where S.IsActive == true
                            select S).OrderBy(x => x.Id).ToList();
 
-        return studentList.Select(x => new StudentListModel()
+        var shift1Id = _db.Lookup.FirstOrDefault(x => x.LookupType == "Shift" && x.LookupName == "Shift 1").LookupId;
+        var shift2Id = _db.Lookup.FirstOrDefault(x => x.LookupType == "Shift" && x.LookupName == "Shift 2").LookupId;
+        var examDateEntry = _db.Lookup.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
+        var examDate = Convert.ToDateTime(examDateEntry).ToLongDateString().Replace(" ", "");
+        var studentData = studentList.Select(x => new StudentListModel()
         {
             Id = x.Id,
             Name = x.Name,
@@ -95,6 +99,16 @@ public class StudentService : IStudentService
             //FileUrl2 = !string.IsNullOrEmpty(x.UploadFile2) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile2}" : string.Empty,
             //FileUrl3 = !string.IsNullOrEmpty(x.UploadFile3) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile3}" : string.Empty,
         }).ToList();
+
+        studentData.ForEach(x =>
+        {
+            var fileNames = _db.StudentFile.Where(y => y.StudentId == x.Id && y.ShiftId == shift1Id).Select(z => $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{x.RollNumber}/Shift1/{z.FileUploadName}").ToList();
+            x.Shift1FileUrls.AddRange(fileNames);
+            fileNames = _db.StudentFile.Where(y => y.StudentId == x.Id && y.ShiftId == shift2Id).Select(z => $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{x.RollNumber}/Shift2/{z.FileUploadName}").ToList();
+            x.Shift2FileUrls.AddRange(fileNames);
+        });
+
+        return studentData;
     }
 
     public bool DeleteStudent(int Id)
