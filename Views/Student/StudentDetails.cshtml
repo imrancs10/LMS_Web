@@ -36,7 +36,7 @@
             <form asp-action="StudentDetails" method="post" enctype="multipart/form-data" id="formStudentDetails">
                 <hr />
                 <div class="form-group mb-2">
-                    <label asp-for="Shift">Examination Shift</label>
+                    <label asp-for="Shift">Examination Shift<span style="color:red">*</span></label>
                     <select class="form-control" asp-for="Shift">
                         <option value="0">Select</option>
                         @foreach (var data in shiftList)

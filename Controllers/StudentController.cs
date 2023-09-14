@@ -97,12 +97,14 @@ public class StudentController : Controller
         var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true, model.Shift);
         if (student != null)
         {
+            var dateOfExam = lookupList.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
+            var examDate = Convert.ToDateTime(dateOfExam).ToLongDateString().Replace(" ", "");
             if (model.UploadFile1 != null)
-                UploadFile(model.UploadFile1, model.RollNumber, uploadFileName1, shiftName);
+                UploadFile(model.UploadFile1, model.RollNumber, uploadFileName1, shiftName, examDate);
             if (model.UploadFile2 != null)
-                UploadFile(model.UploadFile2, model.RollNumber, uploadFileName2, shiftName);
+                UploadFile(model.UploadFile2, model.RollNumber, uploadFileName2, shiftName, examDate);
             if (model.UploadFile3 != null)
-                UploadFile(model.UploadFile3, model.RollNumber, uploadFileName3, shiftName);
+                UploadFile(model.UploadFile3, model.RollNumber, uploadFileName3, shiftName, examDate);
         }
         else
         {
@@ -312,9 +314,9 @@ public class StudentController : Controller
         //put a breakpoint here and check datatable
         return dataTable;
     }
-    private void UploadFile(IFormFile file, string rollNumber, string uploadFileName, string shiftName)
+    private void UploadFile(IFormFile file, string rollNumber, string uploadFileName, string shiftName, string examDate)
     {
-        string uploadsFolder = Path.Combine(WebHostEnvironment.WebRootPath, $"Uploads/Students/{rollNumber}/{shiftName}");
+        string uploadsFolder = Path.Combine(WebHostEnvironment.WebRootPath, $"Uploads/Students/{examDate}/{rollNumber}/{shiftName}");
         if (!Directory.Exists(uploadsFolder))
         {
             Directory.CreateDirectory(uploadsFolder);
