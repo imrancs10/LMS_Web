@@ -1,6 +1,8 @@
 ﻿using DocumentFormat.OpenXml.Wordprocessing;
 using LearningManagementSystem.Models;
+using LearningManagementSystem.ViewModels.Request;
 using LearningManagementSystem.ViewModels.Response;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LearningManagementSystem.Repositories.Service.Student;
 
@@ -15,11 +17,28 @@ public class StudentService : IStudentService
         Configuration = configuration;
     }
 
-    public Models.Student GetStudentDetail(string RollNumber)
+    public StudentDetailResponseModel GetStudentDetail(string RollNumber)
     {
-        return (from S in _db.Student
-                where S.RollNumber == RollNumber
-                select S).FirstOrDefault();
+        var response = (from S in _db.Student
+                        where S.RollNumber == RollNumber
+                        select new StudentDetailResponseModel
+                        {
+                            Id = S.Id,
+                            AadhaarNumber = S.AadhaarNumber,
+                            RollNumber = S.RollNumber,
+                            MobileNumber = S.MobileNumber,
+                            Name = S.Name
+                        }).FirstOrDefault();
+        if (response != null)
+        {
+            var studentPhotoName = _db.StudentFile.FirstOrDefault(x => x.StudentId == response.Id && x.FileUploadName.Contains("_Photo"));
+            var shiftName = _db.Lookup.FirstOrDefault(x => x.LookupId == studentPhotoName.ShiftId).LookupName.Replace(" ", "");
+            var photoName = studentPhotoName.FileUploadName;
+            var examDateEntry = _db.Lookup.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
+            var examDate = Convert.ToDateTime(examDateEntry).ToLongDateString().Replace(" ", "");
+            response.StudentPhoto = $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{response.RollNumber}/{shiftName}/{photoName}";
+        }
+        return response;
     }
 
     public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive, int? shiftId, int? departmentId, string StudentPhoto)

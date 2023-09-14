@@ -10,6 +10,7 @@ using LearningManagementSystem.ViewModels.Request;
 using LearningManagementSystem.ViewModels.Response;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.Reflection;
 using System.Text;
@@ -36,7 +37,7 @@ public class StudentController : Controller
         ViewData["Lookup"] = lookupList;
         var RollNumber = HttpContext.Session.GetString("RoleNumber");
         var studentDetail = _studentService.GetStudentDetail(RollNumber);
-        ViewData["Student"] = studentDetail != null ? studentDetail : new Models.Student();
+        ViewData["Student"] = studentDetail != null ? studentDetail : new StudentDetailResponseModel();
         return View();
     }
 
@@ -48,7 +49,7 @@ public class StudentController : Controller
         ViewData["Lookup"] = lookupList;
         model.RollNumber = HttpContext.Session.GetString("RoleNumber");
         var studentDetail = _studentService.GetStudentDetail(model.RollNumber);
-        ViewData["Student"] = studentDetail != null ? studentDetail : new Models.Student();
+        ViewData["Student"] = studentDetail != null ? studentDetail : new StudentDetailResponseModel();
         var createdDate = DateTime.Now;
 
         if (!ModelState.IsValid)
@@ -77,6 +78,11 @@ public class StudentController : Controller
         //    ModelState.AddModelError("UploadFile", "File Upload 1 is mandatory");
         //    return View(model);
         //}
+        if (model.Shift == 0)
+        {
+            ModelState.AddModelError("Shift", "Shift is mandatory");
+            return View(model);
+        }
         var shiftName = lookupList.FirstOrDefault(x => x.LookupId == model.Shift).LookupName;
         shiftName = shiftName.Replace(" ", "");
         if (model.UploadPhoto != null)
