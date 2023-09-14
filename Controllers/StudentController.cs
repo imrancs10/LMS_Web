@@ -298,7 +298,7 @@ public class StudentController : Controller
                                 RollNumber = x.RollNumber,
                                 AadhaarNumber = x.AadhaarNumber,
                                 MobileNumber = x.MobileNumber,
-                                Mark = x.Mark
+                                Mark = x.Mark,
                                 CreatedDate = x.CreatedDate.Value.ToLongDateString(),
                             }).ToList();
         using (XLWorkbook wb = new XLWorkbook())
