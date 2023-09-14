@@ -36,8 +36,7 @@ namespace LearningManagementSystem.Controllers
             //var studentPassword = _lookupService.GetLookupDetailByType("StudentPassword").FirstOrDefault().LookupName;
             var lmsUser = _lookupService.CheckUserDetail(model.Username, model.Password);
             var studentUser = _lookupService.CheckStudentDetail(model.Username, model.Password);
-            HttpContext.Session.SetString("DepartmentId", model.DepartmentId.ToString());
-            HttpContext.Session.SetString("DepartmentName", lookupList.FirstOrDefault(x => x.LookupId == model.DepartmentId).LookupName);
+           
             //check admin credetials
             if (model.Username == adminUserName && model.Password == adminPassword)
             {
@@ -54,6 +53,8 @@ namespace LearningManagementSystem.Controllers
             //check student credentials
             else if (studentUser != null)
             {
+                HttpContext.Session.SetString("DepartmentId", model.DepartmentId.ToString());
+                HttpContext.Session.SetString("DepartmentName", lookupList.FirstOrDefault(x => x.LookupId == model.DepartmentId).LookupName);
                 HttpContext.Session.SetString("UserRole", "Student");
                 HttpContext.Session.SetString("RoleNumber", model.Username);
                 return RedirectToAction("StudentDetails", "Student");

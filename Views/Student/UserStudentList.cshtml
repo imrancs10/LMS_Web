@@ -82,7 +82,7 @@
                     <td style="white-space:nowrap">
                         <form method="post" action="@Url.Action("SubmitMark", "Student")">
                             <input type="hidden" name="id" value="@student.Id" />
-                            <input type="text" name="mark" value="@student.Mark" style="width:50%">
+                            <input type="text" name="mark" value="@student.Mark" onkeypress="return isNumberKey(event)" style="width:50%">
                             <button type="submit" class="btn btn-success"><i class="fas fa-trash-alt"></i>Save Mark</button>
                         </form>
                     </td>
@@ -121,3 +121,14 @@ else
         <img src="~/Footer_Logo.png" width="700px" height="100px" />
     </div>
 }
+
+<script>
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
