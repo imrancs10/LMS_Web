@@ -17,6 +17,7 @@ public partial class LMSContext : DbContext
     public virtual DbSet<StudentFile> StudentFile { get; set; }
     public virtual DbSet<Lookup> Lookup { get; set; }
     public virtual DbSet<UserDetail> UserDetail { get; set; }
+    public virtual DbSet<StudentCredential> StudentCredential { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Student>(entity =>

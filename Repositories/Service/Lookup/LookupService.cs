@@ -37,6 +37,13 @@ public class LookupService : ILookupService
                           select S).FirstOrDefault();
         return userdetail;
     }
+    public Models.StudentCredential CheckStudentDetail(string username, string password)
+    {
+        var userdetail = (from S in _db.StudentCredential
+                          where S.IsActive == true && S.UserName == username && S.Password == password
+                          select S).FirstOrDefault();
+        return userdetail;
+    }
     public List<Models.UserDetail> TotalUserDetail()
     {
         var userdetail = (from S in _db.UserDetail
