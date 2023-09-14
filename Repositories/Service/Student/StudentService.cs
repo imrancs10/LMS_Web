@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Models;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using LearningManagementSystem.Models;
 using LearningManagementSystem.ViewModels.Response;
 
 namespace LearningManagementSystem.Repositories.Service.Student;
@@ -74,6 +75,14 @@ public class StudentService : IStudentService
         return student;
     }
 
+    public void UpdateStudentMark(int Id, string Mark)
+    {
+        var student = _db.Student.FirstOrDefault(x => x.Id == Id);
+        student.Mark = Mark;
+        _db.Student.Update(student);
+        _db.SaveChanges();
+    }
+
     public List<StudentListModel> GetStudentList()
     {
         var studentList = (from S in _db.Student
@@ -92,6 +101,7 @@ public class StudentService : IStudentService
             AadhaarNumber = x.AadhaarNumber,
             MobileNumber = x.MobileNumber,
             CreatedDate = x.CreatedOn,
+            Mark = x.Mark
             //FileName1 = x.UploadFile1,
             //FileName2 = x.UploadFile2,
             //FileName3 = x.UploadFile3,

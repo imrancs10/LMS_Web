@@ -43,7 +43,7 @@
                 <th>Shift 1 Files</th>
                 <th>Shift 2 Files</th>
                 <th>Submitted On</th>
-                <th>Mark</th>
+                <th>Provide Mark</th>
                 @* <th>Delete</th>*@
             </tr>
         </thead>
@@ -74,10 +74,11 @@
                         }
                     </td>
                     <td>@student.CreatedDate.Value.ToString()</td>
-                    <td>
-                        <form>
+                    <td style="white-space:nowrap">
+                        <form method="post" action="@Url.Action("SubmitMark", "Student")">
                             <input type="hidden" name="id" value="@student.Id" />
-                            <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Mark</button>
+                            <input type="text" name="mark" value="@student.Mark" style="width:50%">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-trash-alt"></i>Save Mark</button>
                         </form>
                     </td>
                     @* <td>

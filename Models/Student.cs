@@ -16,6 +16,7 @@ public partial class Student
     public string AadhaarNumber { get; set; }
 
     public string MobileNumber { get; set; }
+    public string Mark { get; set; }
 
     public DateTime? CreatedOn { get; set; }
 

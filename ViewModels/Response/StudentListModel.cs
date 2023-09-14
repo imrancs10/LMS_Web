@@ -12,6 +12,7 @@ public class StudentListModel
     public string RollNumber { get; set; }
     public string AadhaarNumber { get; set; }
     public string MobileNumber { get; set; }
+    public string Mark { get; set; }
     public string? FileUrl1 { get; set; }
     public string? FileUrl2 { get; set; }
     public string? FileUrl3 { get; set; }

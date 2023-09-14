@@ -164,6 +164,13 @@ public class StudentController : Controller
         return View(studentList);
     }
 
+
+    public IActionResult SubmitMark(int id, string mark)
+    {
+        _studentService.UpdateStudentMark(id, mark);
+        return RedirectToAction("UserStudentList", "Student");
+    }
+
     [SessionCheck("LMS_Admin")]
     [HttpPost]
     public IActionResult DeleteStudentDetail(int id)
