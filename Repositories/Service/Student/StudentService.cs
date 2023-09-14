@@ -32,10 +32,15 @@ public class StudentService : IStudentService
         student.CreatedOn = CreatedDate;
         student.ModifiedOn = CreatedDate;
         student.IsActive = IsActive;
-        if (_db.Student.FirstOrDefault(x => x.RollNumber == RollNumber && x.Name == Name) == null)
+        var existingStudent = _db.Student.FirstOrDefault(x => x.RollNumber == RollNumber && x.Name == Name);
+        if (existingStudent == null)
         {
             _db.Student.Add(student);
             _db.SaveChanges();
+        }
+        else
+        {
+            student = existingStudent;
         }
 
         if (!string.IsNullOrEmpty(FileName1))
