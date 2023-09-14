@@ -66,22 +66,27 @@ public class StudentController : Controller
         var uploadFileName1 = string.Empty;
         var uploadFileName2 = string.Empty;
         var uploadFileName3 = string.Empty;
-        if (model.UploadFile1 == null)
-        {
-            ModelState.AddModelError("UploadFile", "File Upload 1 is mandatory");
-            return View(model);
-        }
+        var StudentPhoto = string.Empty;
+        //if (model.UploadPhoto == null)
+        //{
+        //    ModelState.AddModelError("UploadFile", "Photo is mandatory");
+        //    return View(model);
+        //}
+        //if (model.UploadFile1 == null)
+        //{
+        //    ModelState.AddModelError("UploadFile", "File Upload 1 is mandatory");
+        //    return View(model);
+        //}
         var shiftName = lookupList.FirstOrDefault(x => x.LookupId == model.Shift).LookupName;
         shiftName = shiftName.Replace(" ", "");
+        if (model.UploadPhoto != null)
+        {
+            string fileExtension = Path.GetExtension(model.UploadPhoto.FileName);
+            StudentPhoto = $"{model.RollNumber + "_Photo"}{fileExtension}";
+        }
         if (model.UploadFile1 != null)
         {
             string fileExtension = Path.GetExtension(model.UploadFile1.FileName);
-            //if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".pdf" )
-            //{
-            //    ModelState.AddModelError("UploadFile", "Only jpg, jpeg and pdf files are allowed.");
-            //    return View(model);
-            //}
-            //else
             uploadFileName1 = $"{model.RollNumber + "_File1"}{fileExtension}";
         }
         if (model.UploadFile2 != null)
@@ -96,7 +101,7 @@ public class StudentController : Controller
             uploadFileName3 = $"{model.RollNumber + "_File3"}{fileExtension}";
         }
 
-        var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true, model.Shift, departmentId);
+        var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true, model.Shift, departmentId, StudentPhoto);
         if (student != null)
         {
             var dateOfExam = lookupList.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
@@ -107,6 +112,8 @@ public class StudentController : Controller
                 UploadFile(model.UploadFile2, model.RollNumber, uploadFileName2, shiftName, examDate);
             if (model.UploadFile3 != null)
                 UploadFile(model.UploadFile3, model.RollNumber, uploadFileName3, shiftName, examDate);
+            if (model.UploadPhoto != null)
+                UploadFile(model.UploadPhoto, model.RollNumber, StudentPhoto, shiftName, examDate);
         }
         else
         {
@@ -115,8 +122,8 @@ public class StudentController : Controller
         }
 
         ViewBag.SuccessMessage = "Student details submited successfully";
-        ModelState.Clear();
-        return View();
+        //ModelState.Clear();
+        return RedirectToAction("StudentDetails");
     }
 
     [SessionCheck("LMS_Admin")]

@@ -22,7 +22,7 @@ public class StudentService : IStudentService
                 select S).FirstOrDefault();
     }
 
-    public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive, int? shiftId, int? departmentId)
+    public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive, int? shiftId, int? departmentId, string StudentPhoto)
     {
         Models.Student student = new Models.Student();
         Models.StudentFile studentFile;
@@ -69,6 +69,15 @@ public class StudentService : IStudentService
             studentFile.ShiftId = shiftId;
             studentFile.StudentId = student.Id;
             studentFile.FileUploadName = FileName3;
+            studentFile.CreatedDate = DateTime.Now;
+            _db.StudentFile.Add(studentFile);
+        }
+        if (!string.IsNullOrEmpty(StudentPhoto))
+        {
+            studentFile = new Models.StudentFile();
+            studentFile.ShiftId = shiftId;
+            studentFile.StudentId = student.Id;
+            studentFile.FileUploadName = StudentPhoto;
             studentFile.CreatedDate = DateTime.Now;
             _db.StudentFile.Add(studentFile);
         }

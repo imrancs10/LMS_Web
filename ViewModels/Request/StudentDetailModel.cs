@@ -24,9 +24,9 @@ public class StudentDetailModel
     [Display(Name = "Roll Number")]
     public string? RollNumber { get; set; }
 
-    [Required]
+    public IFormFile? UploadPhoto { get; set; }
     [Display(Name = "Upload File 1")]
-    public IFormFile UploadFile1 { get; set; }
+    public IFormFile? UploadFile1 { get; set; }
     public IFormFile? UploadFile2 { get; set; }
     public IFormFile? UploadFile3 { get; set; }
 }

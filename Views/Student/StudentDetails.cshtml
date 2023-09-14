@@ -33,7 +33,7 @@
                 <div class="text-danger">
                     @if (!string.IsNullOrEmpty(studentDetail.Name))
                     {
-                        <p>Student Detail are fetched from System Number, If data are not correct then please change it or provide the mobile number to Submit</p>
+                        <p>Student Detail are fetched from System Number, If data are not correct then please change it to Submit</p>
                     }
                 </div>
             </div>
@@ -66,7 +66,12 @@
 
                 <div class="form-group mb-2">
                     <label asp-for="MobileNumber">Mobile No<span style="color:red">*</span></label>
-                    <input asp-for="MobileNumber" class="form-control" onkeypress="return isNumberKey(event)" maxlength="10" />
+                    <input asp-for="MobileNumber" class="form-control" value="@studentDetail.MobileNumber" onkeypress="return isNumberKey(event)" maxlength="10" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="UploadPhoto">Select Photo(Only jpg/jpeg/png)<span style="color:red">*</span></label>
+                    <input asp-for="UploadPhoto" type="file" class="form-control" />
                 </div>
 
                 <div class="form-group mb-3">
@@ -83,7 +88,14 @@
                     <label asp-for="UploadFile3">Select File</label>
                     <input asp-for="UploadFile3" type="file" class="form-control" />
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                @if (string.IsNullOrEmpty(studentDetail.Name))
+                {
+                    <button type="submit" class="btn btn-primary">Save and Start Exam</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                }
             </form>
         </div>
     </div>
