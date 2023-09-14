@@ -102,12 +102,6 @@ public class StudentService : IStudentService
             MobileNumber = x.MobileNumber,
             CreatedDate = x.CreatedOn,
             Mark = x.Mark
-            //FileName1 = x.UploadFile1,
-            //FileName2 = x.UploadFile2,
-            //FileName3 = x.UploadFile3,
-            //FileUrl1 = !string.IsNullOrEmpty(x.UploadFile1) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile1}" : string.Empty,
-            //FileUrl2 = !string.IsNullOrEmpty(x.UploadFile2) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile2}" : string.Empty,
-            //FileUrl3 = !string.IsNullOrEmpty(x.UploadFile3) ? $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{x.RollNumber}/{x.UploadFile3}" : string.Empty,
         }).ToList();
 
         studentData.ForEach(x =>

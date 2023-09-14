@@ -217,9 +217,10 @@ public class StudentController : Controller
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>System Number</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Govt. Id Number</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Mobile No</th>");
-        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 1</th>");
-        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 2</th>");
-        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 3</th>");
+        //sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 1</th>");
+        //sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 2</th>");
+        //sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>File Name 3</th>");
+        sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Mark</th>");
         sb.Append("<th style='background-color: #B8DBFD;border: 1px solid #ccc'>Submitted On</th>");
         sb.Append("</tr>");
 
@@ -249,16 +250,20 @@ public class StudentController : Controller
             sb.Append("</td>");
 
             sb.Append("<td style='border: 1px solid #ccc'>");
-            sb.Append(customer.FileName1);
+            sb.Append(customer.Mark);
             sb.Append("</td>");
 
-            sb.Append("<td style='border: 1px solid #ccc'>");
-            sb.Append(customer.FileName2);
-            sb.Append("</td>");
+            //sb.Append("<td style='border: 1px solid #ccc'>");
+            //sb.Append(customer.FileName1);
+            //sb.Append("</td>");
 
-            sb.Append("<td style='border: 1px solid #ccc'>");
-            sb.Append(customer.FileName3);
-            sb.Append("</td>");
+            //sb.Append("<td style='border: 1px solid #ccc'>");
+            //sb.Append(customer.FileName2);
+            //sb.Append("</td>");
+
+            //sb.Append("<td style='border: 1px solid #ccc'>");
+            //sb.Append(customer.FileName3);
+            //sb.Append("</td>");
 
             sb.Append("<td style='border: 1px solid #ccc'>");
             sb.Append(customer.CreatedDate.Value.ToString());
@@ -286,9 +291,19 @@ public class StudentController : Controller
         var lookupList = _lookupService.GetAllLookup();
         ViewData["Lookup"] = lookupList;
         List<StudentListModel> customers = _studentService.GetStudentList();
+        var dataToExport = (from x in customers
+                            select new
+                            {
+                                Name = x.Name,
+                                RollNumber = x.RollNumber,
+                                AadhaarNumber = x.AadhaarNumber,
+                                MobileNumber = x.MobileNumber,
+                                Mark = x.Mark
+                                CreatedDate = x.CreatedDate.Value.ToLongDateString(),
+                            }).ToList();
         using (XLWorkbook wb = new XLWorkbook())
         {
-            wb.Worksheets.Add(ToDataTable(customers.ToList()));
+            wb.Worksheets.Add(ToDataTable(dataToExport.ToList()));
             using (MemoryStream stream = new MemoryStream())
             {
                 wb.SaveAs(stream);
