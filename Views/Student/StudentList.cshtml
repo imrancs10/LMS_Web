@@ -1,14 +1,17 @@
 ﻿@using LearningManagementSystem.ViewModels.Response
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @model List<StudentListModel>
 @{
     ViewData["Title"] = "Students List";
     var lookupDetail = ViewData["Lookup"] as List<Lookup>;
     var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
     var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
-    var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
+    //var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
     int index = 0;
 }
-
+@{
+    string ExamName = HttpContextAccessor.HttpContext.Session.GetString("DepartmentName");
+}
 @if (Model != null && Model.Count() > 0)
 {
     <div class="text-center" style="width:1200px;!important">

@@ -1,12 +1,16 @@
 ﻿@using LearningManagementSystem.ViewModels.Request
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Student Detail";
     var lookupDetail = ViewData["Lookup"] as List<Lookup>;
     var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
     var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
-    var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
+    //var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
     var shiftList = lookupDetail.Where(x => x.LookupType == "Shift").ToList();
     var studentDetail = ViewData["Student"] as Student;
+}
+@{
+    string ExamName = HttpContextAccessor.HttpContext.Session.GetString("DepartmentName");
 }
 @model StudentDetailModel
 

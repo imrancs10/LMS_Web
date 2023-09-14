@@ -5,7 +5,7 @@
     var lookupDetail = ViewData["Lookup"] as List<Lookup>;
     var dateOfExam = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
     var date = Convert.ToDateTime(dateOfExam).ToLongDateString();
-    var ExamName = lookupDetail.FirstOrDefault(x => x.LookupType == "ExamName").LookupName;
+    var ExamNameList = lookupDetail.Where(x => x.LookupType == "ExamName").ToList();
 }
 
 @model LoginModel
@@ -16,7 +16,7 @@
 <div class="text-center" style="width:1200px;!important">
     <center><img src="~/logo_spit.png" width="700px" height="100px" /></center>
     <br><h3>Learning Management System</h3>
-    <h6>@ExamName</h6>
+    @*<h6>@ExamName</h6>*@
     <h6 style="color:red">DATE OF EXAM: @date</h6>
 </div>
 
@@ -31,6 +31,17 @@
             <form asp-action="Login" method="post">
                 <h2 style="text-align:center">Login</h2>
                 <hr />
+                <div class="form-group mb-2">
+                    <label asp-for="DepartmentId">Department Name</label>
+                    <select class="form-control" asp-for="DepartmentId">
+                        <option value="0">Select</option>
+                        @foreach (var data in ExamNameList)
+                        {
+                            <option value="@data.LookupId">@data.LookupName</option>
+                        }
+                    </select>
+                </div>
+
                 <div class="form-group mb-2">
                     <label asp-for="Username">Username/Desk Number</label>
                     <input asp-for="Username" class="form-control" />

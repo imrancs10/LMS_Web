@@ -23,4 +23,5 @@ public partial class Student
     public DateTime? ModifiedOn { get; set; }
 
     public bool? IsActive { get; set; }
+    public int? DepartmentId { get; set; }
 }

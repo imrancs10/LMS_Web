@@ -61,6 +61,8 @@ public class StudentController : Controller
             //return View(model);
         }
 
+        var departmentId = Convert.ToInt32(HttpContext.Session.GetString("DepartmentId"));
+
         var uploadFileName1 = string.Empty;
         var uploadFileName2 = string.Empty;
         var uploadFileName3 = string.Empty;
@@ -94,7 +96,7 @@ public class StudentController : Controller
             uploadFileName3 = $"{model.RollNumber + "_File3"}{fileExtension}";
         }
 
-        var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true, model.Shift);
+        var student = _studentService.CreateStudent(model.Name, model.RollNumber, model.AadhaarNumber, model.MobileNumber, uploadFileName1, uploadFileName2, uploadFileName3, createdDate, true, model.Shift, departmentId);
         if (student != null)
         {
             var dateOfExam = lookupList.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;

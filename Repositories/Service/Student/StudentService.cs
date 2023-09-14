@@ -22,7 +22,7 @@ public class StudentService : IStudentService
                 select S).FirstOrDefault();
     }
 
-    public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive, int? shiftId)
+    public Models.Student CreateStudent(string Name, string RollNumber, string AadhaarNumber, string MobileNumber, string? FileName1, string? FileName2, string? FileName3, DateTime CreatedDate, bool IsActive, int? shiftId, int? departmentId)
     {
         Models.Student student = new Models.Student();
         Models.StudentFile studentFile;
@@ -33,6 +33,7 @@ public class StudentService : IStudentService
         student.CreatedOn = CreatedDate;
         student.ModifiedOn = CreatedDate;
         student.IsActive = IsActive;
+        student.DepartmentId = departmentId;
         var existingStudent = _db.Student.FirstOrDefault(x => x.RollNumber == RollNumber && x.Name == Name);
         if (existingStudent == null)
         {
