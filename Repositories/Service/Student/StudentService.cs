@@ -66,39 +66,55 @@ public class StudentService : IStudentService
 
         if (!string.IsNullOrEmpty(FileName1))
         {
-            studentFile = new Models.StudentFile();
-            studentFile.ShiftId = shiftId;
-            studentFile.StudentId = student.Id;
-            studentFile.FileUploadName = FileName1;
-            studentFile.CreatedDate = DateTime.Now;
-            _db.StudentFile.Add(studentFile);
+            var existingStudentFile = _db.StudentFile.FirstOrDefault(x => x.StudentId == student.Id && x.ShiftId == shiftId && x.FileUploadName == FileName1);
+            if (existingStudentFile == null)
+            {
+                studentFile = new Models.StudentFile();
+                studentFile.ShiftId = shiftId;
+                studentFile.StudentId = student.Id;
+                studentFile.FileUploadName = FileName1;
+                studentFile.CreatedDate = DateTime.Now;
+                _db.StudentFile.Add(studentFile);
+            }
         }
         if (!string.IsNullOrEmpty(FileName2))
         {
-            studentFile = new Models.StudentFile();
-            studentFile.ShiftId = shiftId;
-            studentFile.StudentId = student.Id;
-            studentFile.FileUploadName = FileName2;
-            studentFile.CreatedDate = DateTime.Now;
-            _db.StudentFile.Add(studentFile);
+            var existingStudentFile = _db.StudentFile.FirstOrDefault(x => x.StudentId == student.Id && x.ShiftId == shiftId && x.FileUploadName == FileName2);
+            if (existingStudentFile == null)
+            {
+                studentFile = new Models.StudentFile();
+                studentFile.ShiftId = shiftId;
+                studentFile.StudentId = student.Id;
+                studentFile.FileUploadName = FileName2;
+                studentFile.CreatedDate = DateTime.Now;
+                _db.StudentFile.Add(studentFile);
+            }
         }
         if (!string.IsNullOrEmpty(FileName3))
         {
-            studentFile = new Models.StudentFile();
-            studentFile.ShiftId = shiftId;
-            studentFile.StudentId = student.Id;
-            studentFile.FileUploadName = FileName3;
-            studentFile.CreatedDate = DateTime.Now;
-            _db.StudentFile.Add(studentFile);
+            var existingStudentFile = _db.StudentFile.FirstOrDefault(x => x.StudentId == student.Id && x.ShiftId == shiftId && x.FileUploadName == FileName3);
+            if (existingStudentFile == null)
+            {
+                studentFile = new Models.StudentFile();
+                studentFile.ShiftId = shiftId;
+                studentFile.StudentId = student.Id;
+                studentFile.FileUploadName = FileName3;
+                studentFile.CreatedDate = DateTime.Now;
+                _db.StudentFile.Add(studentFile);
+            }
         }
         if (!string.IsNullOrEmpty(StudentPhoto))
         {
-            studentFile = new Models.StudentFile();
-            studentFile.ShiftId = shiftId;
-            studentFile.StudentId = student.Id;
-            studentFile.FileUploadName = StudentPhoto;
-            studentFile.CreatedDate = DateTime.Now;
-            _db.StudentFile.Add(studentFile);
+            var existingStudentFile = _db.StudentFile.FirstOrDefault(x => x.StudentId == student.Id && x.ShiftId == shiftId && x.FileUploadName == StudentPhoto);
+            if (existingStudentFile == null)
+            {
+                studentFile = new Models.StudentFile();
+                studentFile.ShiftId = shiftId;
+                studentFile.StudentId = student.Id;
+                studentFile.FileUploadName = StudentPhoto;
+                studentFile.CreatedDate = DateTime.Now;
+                _db.StudentFile.Add(studentFile);
+            }
         }
         _db.SaveChanges();
         return student;
