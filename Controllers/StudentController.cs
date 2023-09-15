@@ -54,7 +54,8 @@ public class StudentController : Controller
         model.RollNumber = HttpContext.Session.GetString("RoleNumber");
         var studentDetail = _studentService.GetStudentDetail(model.RollNumber);
         ViewData["Student"] = studentDetail != null ? studentDetail : new StudentDetailResponseModel();
-        var createdDate = DateTime.Now;
+        TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+        DateTime createdDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
 
         if (!ModelState.IsValid)
         {
@@ -128,7 +129,7 @@ public class StudentController : Controller
 
             if (model.UploadFile1 != null || model.UploadFile2 != null || model.UploadFile3 != null)
             {
-               return RedirectToAction("Logout", "Authentication", new { msg = "Student details submited successfully" });
+                return RedirectToAction("Logout", "Authentication", new { msg = "Student details submited successfully" });
             }
         }
         else

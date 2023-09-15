@@ -54,6 +54,7 @@ public class StudentService : IStudentService
         student.IsActive = IsActive;
         student.DepartmentId = departmentId;
         var existingStudent = _db.Student.FirstOrDefault(x => x.RollNumber == RollNumber && x.Name == Name);
+        TimeZoneInfo INDIAN_ZONE = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
         if (existingStudent == null)
         {
             _db.Student.Add(student);
@@ -73,7 +74,7 @@ public class StudentService : IStudentService
                 studentFile.ShiftId = shiftId;
                 studentFile.StudentId = student.Id;
                 studentFile.FileUploadName = FileName1;
-                studentFile.CreatedDate = DateTime.Now;
+                studentFile.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
                 _db.StudentFile.Add(studentFile);
             }
         }
@@ -86,7 +87,7 @@ public class StudentService : IStudentService
                 studentFile.ShiftId = shiftId;
                 studentFile.StudentId = student.Id;
                 studentFile.FileUploadName = FileName2;
-                studentFile.CreatedDate = DateTime.Now;
+                studentFile.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
                 _db.StudentFile.Add(studentFile);
             }
         }
@@ -99,7 +100,7 @@ public class StudentService : IStudentService
                 studentFile.ShiftId = shiftId;
                 studentFile.StudentId = student.Id;
                 studentFile.FileUploadName = FileName3;
-                studentFile.CreatedDate = DateTime.Now;
+                studentFile.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
                 _db.StudentFile.Add(studentFile);
             }
         }
@@ -112,7 +113,7 @@ public class StudentService : IStudentService
                 studentFile.ShiftId = shiftId;
                 studentFile.StudentId = student.Id;
                 studentFile.FileUploadName = StudentPhoto;
-                studentFile.CreatedDate = DateTime.Now;
+                studentFile.CreatedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, INDIAN_ZONE);
                 _db.StudentFile.Add(studentFile);
             }
         }
@@ -150,12 +151,12 @@ public class StudentService : IStudentService
         }).ToList();
 
         studentData.ForEach(x =>
-        {
-            var fileNames = _db.StudentFile.Where(y => y.StudentId == x.Id && y.ShiftId == shift1Id).Select(z => $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{x.RollNumber}/Shift1/{z.FileUploadName}").ToList();
-            x.Shift1FileUrls.AddRange(fileNames);
-            fileNames = _db.StudentFile.Where(y => y.StudentId == x.Id && y.ShiftId == shift2Id).Select(z => $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{x.RollNumber}/Shift2/{z.FileUploadName}").ToList();
-            x.Shift2FileUrls.AddRange(fileNames);
-        });
+            {
+                var fileNames = _db.StudentFile.Where(y => y.StudentId == x.Id && y.ShiftId == shift1Id).Select(z => $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{x.RollNumber}/Shift1/{z.FileUploadName}").ToList();
+                x.Shift1FileUrls.AddRange(fileNames);
+                fileNames = _db.StudentFile.Where(y => y.StudentId == x.Id && y.ShiftId == shift2Id).Select(z => $"{Configuration["Settings:WebsiteUrl"]}Uploads/Students/{examDate}/{x.RollNumber}/Shift2/{z.FileUploadName}").ToList();
+                x.Shift2FileUrls.AddRange(fileNames);
+            });
 
         return studentData;
     }
