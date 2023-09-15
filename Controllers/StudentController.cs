@@ -31,13 +31,17 @@ public class StudentController : Controller
         WebHostEnvironment = webHostEnvironment;
         _studentService = studentService;
     }
-    public IActionResult StudentDetails()
+    public IActionResult StudentDetails(string? msg)
     {
         var lookupList = _lookupService.GetAllLookup();
         ViewData["Lookup"] = lookupList;
         var RollNumber = HttpContext.Session.GetString("RoleNumber");
         var studentDetail = _studentService.GetStudentDetail(RollNumber);
         ViewData["Student"] = studentDetail != null ? studentDetail : new StudentDetailResponseModel();
+        if (!string.IsNullOrEmpty(msg))
+        {
+            ViewBag.SuccessMessage = msg;
+        }
         return View();
     }
 
@@ -112,14 +116,20 @@ public class StudentController : Controller
         {
             var dateOfExam = lookupList.FirstOrDefault(x => x.LookupType == "ExamDate").LookupName;
             var examDate = Convert.ToDateTime(dateOfExam).ToLongDateString().Replace(" ", "");
+            if (model.UploadPhoto != null)
+                UploadFile(model.UploadPhoto, model.RollNumber, StudentPhoto, shiftName, examDate);
+
             if (model.UploadFile1 != null)
                 UploadFile(model.UploadFile1, model.RollNumber, uploadFileName1, shiftName, examDate);
             if (model.UploadFile2 != null)
                 UploadFile(model.UploadFile2, model.RollNumber, uploadFileName2, shiftName, examDate);
             if (model.UploadFile3 != null)
                 UploadFile(model.UploadFile3, model.RollNumber, uploadFileName3, shiftName, examDate);
-            if (model.UploadPhoto != null)
-                UploadFile(model.UploadPhoto, model.RollNumber, StudentPhoto, shiftName, examDate);
+
+            if (model.UploadFile1 != null || model.UploadFile2 != null || model.UploadFile3 != null)
+            {
+               return RedirectToAction("Logout", "Authentication", new { msg = "Student details submited successfully" });
+            }
         }
         else
         {
@@ -127,9 +137,9 @@ public class StudentController : Controller
             return View(model);
         }
 
-        ViewBag.SuccessMessage = "Student details submited successfully";
+        //ViewBag.SuccessMessage = "Student details submited successfully";
         //ModelState.Clear();
-        return RedirectToAction("StudentDetails");
+        return RedirectToAction("StudentDetails", new { msg = "Student details submited successfully" });
     }
 
     [SessionCheck("LMS_Admin")]

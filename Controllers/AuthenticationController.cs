@@ -1,4 +1,5 @@
-﻿using LearningManagementSystem.Repositories.Service.Lookup;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using LearningManagementSystem.Repositories.Service.Lookup;
 using LearningManagementSystem.Repositories.Service.Student;
 using LearningManagementSystem.ViewModels.Request;
 using Microsoft.AspNetCore.Hosting;
@@ -10,14 +11,20 @@ namespace LearningManagementSystem.Controllers
     public class AuthenticationController : Controller
     {
         private readonly ILookupService _lookupService;
-        public AuthenticationController(ILookupService lookupService)
+        private readonly IStudentService _studentService;
+        public AuthenticationController(ILookupService lookupService, IStudentService studentService)
         {
             _lookupService = lookupService;
+            _studentService = studentService;
         }
-        public IActionResult Login()
+        public IActionResult Login(string? message)
         {
             var lookupList = _lookupService.GetAllLookup();
             ViewData["Lookup"] = lookupList;
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.SuccessMessage = message;
+            }
             return View();
         }
 
@@ -36,7 +43,7 @@ namespace LearningManagementSystem.Controllers
             //var studentPassword = _lookupService.GetLookupDetailByType("StudentPassword").FirstOrDefault().LookupName;
             var lmsUser = _lookupService.CheckUserDetail(model.Username, model.Password);
             var studentUser = _lookupService.CheckStudentDetail(model.Username, model.Password);
-           
+
             //check admin credetials
             if (model.Username == adminUserName && model.Password == adminPassword)
             {
@@ -57,7 +64,11 @@ namespace LearningManagementSystem.Controllers
                 HttpContext.Session.SetString("DepartmentName", lookupList.FirstOrDefault(x => x.LookupId == model.DepartmentId).LookupName);
                 HttpContext.Session.SetString("UserRole", "Student");
                 HttpContext.Session.SetString("RoleNumber", model.Username);
-                return RedirectToAction("StudentDetails", "Student");
+                var studentDetail = _studentService.GetStudentDetail(model.Username);
+                if (studentDetail != null)
+                    return RedirectToAction("StudentDetails", "Student", new { msg = "Student Detail are fetched from System Number, If data are not correct then please change it to Submit" });
+                else
+                    return RedirectToAction("StudentDetails", "Student");
             }
             else
             {
@@ -66,10 +77,10 @@ namespace LearningManagementSystem.Controllers
             }
         }
 
-        public IActionResult Logout()
+        public IActionResult Logout(string? msg)
         {
             HttpContext.Session.Remove("UserRole");
-            return RedirectToAction("Login", "Authentication");
+            return RedirectToAction("Login", "Authentication", new { message = msg });
         }
     }
 }
